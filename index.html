@@ -68,8 +68,8 @@
         <h3>Nhập môn học & điểm:</h3>
         <input type="text" id="tenMon" placeholder="Nhập tên môn (VD: Toán, Văn, Anh...)"><br>
         <input type="text" id="diemTX" placeholder="Điểm TX (cách nhau bằng dấu `,`)"><br>
-        <input type="number" id="diemGK" placeholder="Điểm Giữa kỳ (hệ số 2)"><br>
-        <input type="number" id="diemCK" placeholder="Điểm Cuối kỳ (hệ số 3)"><br>
+        <input type="number" id="diemGK" placeholder="Điểm Giữa kỳ (hệ số 2)" max="10"><br>
+        <input type="number" id="diemCK" placeholder="Điểm Cuối kỳ (hệ số 3)" max="10"><br>
         <button onclick="tinhDiem()">💀 Tính Điểm</button>
         <button onclick="luuDiem()">💾 Lưu Điểm</button>
         <button onclick="xemDiem()">📂 Xem Điểm Đã Lưu</button>
@@ -94,6 +94,11 @@
 
             if (!tenMon || diemTX.some(isNaN) || isNaN(diemGK) || isNaN(diemCK)) {
                 alert("Vui lòng nhập đầy đủ thông tin và kiểm tra lại điểm!");
+                return;
+            }
+
+            if (diemGK > 10 || diemCK > 10 || diemTX.some(d => d > 10)) {
+                alert("Điểm không thể lớn hơn 10!");
                 return;
             }
 
