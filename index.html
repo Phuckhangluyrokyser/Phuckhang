@@ -2,87 +2,162 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhúcKhang?(Kyser) - Hacker GPA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>PhúcKhang? (Kyser) - GPA Calculator</title>
     <style>
-        @keyframes glitch {
-            0% { text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00; }
-            50% { text-shadow: -2px -2px 0 #ff0000, 2px 2px 0 #00ff00; }
-            100% { text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00; }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
         body {
             background-color: black;
-            color: #00ff00;
-            font-family: "Courier New", monospace;
+            color: lime;
+            font-family: "Orbitron", monospace;
             text-align: center;
             margin: 0;
-            padding: 10px;
+            padding: 0;
         }
         h1 {
-            font-size: 2em;
-            animation: glitch 0.5s infinite alternate;
+            text-shadow: 2px 2px red;
+            border-bottom: 2px solid lime;
+            padding-bottom: 10px;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            max-width: 800px;
+            border: 2px solid lime;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
         }
         input, button {
-            background-color: black;
-            color: #00ff00;
-            border: 1px solid #00ff00;
+            background: black;
+            color: lime;
+            border: 2px solid lime;
             padding: 10px;
             margin: 5px;
+            font-size: 18px;
             width: 90%;
-            font-size: 1em;
+            max-width: 400px;
         }
-        .hacker-text {
-            font-size: 1.2em;
-            color: red;
-            text-shadow: 0 0 10px red;
+        button {
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: lime;
+            color: black;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid lime;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: darkgreen;
         }
     </style>
 </head>
 <body>
-    <h1>PhúcKhang?(Kyser) - GPA Calculator</h1>
-    <p class="hacker-text">=== SYSTEM ONLINE... HACKER MODE ACTIVATED ===</p>
+    <h1>PhúcKhang? (Kyser) - GPA Calculator</h1>
+    <div class="container">
+        <h3>Nhập môn học & điểm:</h3>
+        <input type="text" id="tenMon" placeholder="Nhập tên môn (VD: Toán, Văn, Anh...)"><br>
+        <input type="text" id="diemTX" placeholder="Điểm TX (cách nhau bằng dấu `,`)"><br>
+        <input type="number" id="diemGK" placeholder="Điểm Giữa kỳ (hệ số 2)"><br>
+        <input type="number" id="diemCK" placeholder="Điểm Cuối kỳ (hệ số 3)"><br>
+        <button onclick="tinhDiem()">💀 Tính Điểm</button>
+        <button onclick="luuDiem()">💾 Lưu Điểm</button>
+        <button onclick="xemDiem()">📂 Xem Điểm Đã Lưu</button>
+    </div>
 
-    <h3>Nhập điểm Thường Xuyên (cách nhau bằng dấu ","):</h3>
-    <input id="diemTX" type="text" placeholder="VD: 9,8.5,10">
-    
-    <h3>Nhập điểm Giữa kỳ:</h3>
-    <input id="diemGK" type="number" step="0.01" placeholder="VD: 8">
-    
-    <h3>Nhập điểm Cuối kỳ:</h3>
-    <input id="diemCK" type="number" step="0.01" placeholder="VD: 9">
+    <div class="container">
+        <h2>Kết quả:</h2>
+        <div id="ketQua"></div>
+    </div>
 
-    <button onclick="tinhDiem()">Tính Điểm</button>
-    <h2 id="ketqua"></h2>
+    <div class="container">
+        <h2>Điểm đã lưu:</h2>
+        <div id="diemLuu"></div>
+    </div>
 
     <script>
         function tinhDiem() {
-            let txInput = document.getElementById("diemTX").value.trim();
-            let gk = parseFloat(document.getElementById("diemGK").value);
-            let ck = parseFloat(document.getElementById("diemCK").value);
+            let tenMon = document.getElementById("tenMon").value.trim();
+            let diemTX = document.getElementById("diemTX").value.split(",").map(Number);
+            let diemGK = parseFloat(document.getElementById("diemGK").value);
+            let diemCK = parseFloat(document.getElementById("diemCK").value);
 
-            // Xử lý điểm TX (tách ra và tính trung bình)
-            let diemTX = txInput.split(",").map(Number).filter(n => !isNaN(n));
-            let tbTX = diemTX.length ? (diemTX.reduce((a, b) => a + b, 0) / diemTX.length) : 0;
+            if (!tenMon || diemTX.some(isNaN) || isNaN(diemGK) || isNaN(diemCK)) {
+                alert("Vui lòng nhập đầy đủ thông tin và kiểm tra lại điểm!");
+                return;
+            }
 
-            // Kiểm tra nếu điểm GK hoặc CK rỗng, thì tính là 0
-            if (isNaN(gk)) gk = 0;
-            if (isNaN(ck)) ck = 0;
+            let TB_TX = diemTX.reduce((a, b) => a + b, 0) / diemTX.length;
+            let TBM = (TB_TX + diemGK * 2 + diemCK * 3) / 6;
 
-            // Công thức tính trung bình môn
-            let tbm = ((tbTX + gk * 2 + ck * 3) / 6).toFixed(2);
+            let xepLoai = "Yếu";
+            if (TBM >= 9) xepLoai = "Học sinh xúc xích";
+            else if (TBM >= 8) xepLoai = "Giỏi";
+            else if (TBM >= 6.5) xepLoai = "Khá";
+            else if (TBM >= 5) xepLoai = "Trung bình";
 
-            // Xếp loại học sinh
-            let loai;
-            if (tbm >= 9) loai = "Học sinh xúc xích";
-            else if (tbm >= 8) loai = "Giỏi";
-            else if (tbm >= 6.5) loai = "Khá";
-            else if (tbm >= 5) loai = "Trung Bình";
-            else loai = "Yếu";
-
-            document.getElementById("ketqua").innerHTML = `
-                <h3>Trung bình môn: ${tbm} - Xếp loại: ${loai}</h3>
+            document.getElementById("ketQua").innerHTML = `
+                <table>
+                    <tr><th>Môn</th><th>Trung Bình</th><th>Xếp Loại</th></tr>
+                    <tr><td>${tenMon}</td><td>${TBM.toFixed(2)}</td><td>${xepLoai}</td></tr>
+                </table>
             `;
+        }
+
+        function luuDiem() {
+            let tenMon = document.getElementById("tenMon").value.trim();
+            let diemTX = document.getElementById("diemTX").value;
+            let diemGK = document.getElementById("diemGK").value;
+            let diemCK = document.getElementById("diemCK").value;
+
+            if (!tenMon) {
+                alert("Vui lòng nhập tên môn!");
+                return;
+            }
+
+            let danhSachDiem = JSON.parse(localStorage.getItem("danhSachDiem")) || [];
+            danhSachDiem.push({ tenMon, diemTX, diemGK, diemCK });
+            localStorage.setItem("danhSachDiem", JSON.stringify(danhSachDiem));
+            alert("Đã lưu điểm!");
+        }
+
+        function xemDiem() {
+            let danhSachDiem = JSON.parse(localStorage.getItem("danhSachDiem")) || [];
+            if (danhSachDiem.length === 0) {
+                document.getElementById("diemLuu").innerHTML = "Chưa có điểm nào được lưu!";
+                return;
+            }
+
+            let html = "<table><tr><th>Môn</th><th>TX</th><th>GK</th><th>CK</th><th>Xóa</th></tr>";
+            danhSachDiem.forEach((item, index) => {
+                html += `<tr>
+                    <td>${item.tenMon}</td>
+                    <td>[${item.diemTX}]</td>
+                    <td>${item.diemGK}</td>
+                    <td>${item.diemCK}</td>
+                    <td><button onclick="xoaDiem(${index})">🗑</button></td>
+                </tr>`;
+            });
+            html += "</table>";
+
+            document.getElementById("diemLuu").innerHTML = html;
+        }
+
+        function xoaDiem(index) {
+            let danhSachDiem = JSON.parse(localStorage.getItem("danhSachDiem")) || [];
+            danhSachDiem.splice(index, 1);
+            localStorage.setItem("danhSachDiem", JSON.stringify(danhSachDiem));
+            xemDiem();
         }
     </script>
 </body>
