@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhúcKhang?(Kyser) - Hacker GPA</title>
+    <style>
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00; }
+            50% { text-shadow: -2px -2px 0 #ff0000, 2px 2px 0 #00ff00; }
+            100% { text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00; }
+        }
+
+        body {
+            background-color: black;
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+        }
+        h1 {
+            font-size: 2em;
+            animation: glitch 0.5s infinite alternate;
+        }
+        input, button {
+            background-color: black;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin: 5px;
+            width: 90%;
+            font-size: 1em;
+        }
+        .hacker-text {
+            font-size: 1.2em;
+            color: red;
+            text-shadow: 0 0 10px red;
+        }
+    </style>
+</head>
+<body>
+    <h1>PhúcKhang?(Kyser) - GPA Calculator</h1>
+    <p class="hacker-text">=== SYSTEM ONLINE... HACKER MODE ACTIVATED ===</p>
+
+    <h3>Nhập điểm Thường Xuyên (cách nhau bằng dấu ","):</h3>
+    <input id="diemTX" type="text" placeholder="VD: 9,8.5,10">
+    
+    <h3>Nhập điểm Giữa kỳ:</h3>
+    <input id="diemGK" type="number" step="0.01" placeholder="VD: 8">
+    
+    <h3>Nhập điểm Cuối kỳ:</h3>
+    <input id="diemCK" type="number" step="0.01" placeholder="VD: 9">
+
+    <button onclick="tinhDiem()">Tính Điểm</button>
+    <h2 id="ketqua"></h2>
+
+    <script>
+        function tinhDiem() {
+            let txInput = document.getElementById("diemTX").value.trim();
+            let gk = parseFloat(document.getElementById("diemGK").value);
+            let ck = parseFloat(document.getElementById("diemCK").value);
+
+            // Xử lý điểm TX (tách ra và tính trung bình)
+            let diemTX = txInput.split(",").map(Number).filter(n => !isNaN(n));
+            let tbTX = diemTX.length ? (diemTX.reduce((a, b) => a + b, 0) / diemTX.length) : 0;
+
+            // Kiểm tra nếu điểm GK hoặc CK rỗng, thì tính là 0
+            if (isNaN(gk)) gk = 0;
+            if (isNaN(ck)) ck = 0;
+
+            // Công thức tính trung bình môn
+            let tbm = ((tbTX + gk * 2 + ck * 3) / 6).toFixed(2);
+
+            // Xếp loại học sinh
+            let loai;
+            if (tbm >= 9) loai = "Học sinh xúc xích";
+            else if (tbm >= 8) loai = "Giỏi";
+            else if (tbm >= 6.5) loai = "Khá";
+            else if (tbm >= 5) loai = "Trung Bình";
+            else loai = "Yếu";
+
+            document.getElementById("ketqua").innerHTML = `
+                <h3>Trung bình môn: ${tbm} - Xếp loại: ${loai}</h3>
+            `;
+        }
+    </script>
+</body>
+</html>
